@@ -1,4 +1,5 @@
-const Equipment = require('./Equipment');
-const Possible_Parts = require('./Parts')
+const Assets = require('./Assets');
+const Possible_Parts = require('./InstalledParts')
+const Users = require ('./Users')
 
-module.exports = { Equipment, Possible_Parts };
+module.exports = { Assets, Possible_Parts, Users };

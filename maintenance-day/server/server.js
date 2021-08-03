@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const routes = require('./routes');
+//const routes = require('./routes');
 const { ApolloServer } = require('apollo-server-express');
 const db = require('./config/connection');
 const sequelize = require('./config/connection');
@@ -17,7 +17,7 @@ server.applyMiddleware({ app });
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(routes);
+//app.use(routes);
 
 // if we're in production, serve client/build as static assets
 if (process.env.NODE_ENV === 'production') {
@@ -28,7 +28,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
-sequelize.sync({ force: false }).then(() => {
+//sequelize.sync({ force: false }).then(() => {
 db.once('open', () => {
     app.listen(PORT, () => {
       console.log(`API server running on port ${PORT}!`);
@@ -36,4 +36,4 @@ db.once('open', () => {
       console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
     });
   });
-});
+//});
