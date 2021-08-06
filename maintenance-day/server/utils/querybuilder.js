@@ -1,15 +1,6 @@
 const fetch = require('node-fetch');
 require('dotenv').config();
 
-// Constants
-const endpoint = process.env.ENDPOINT ;
-//const path = '/ES1/Trendlogs';
-const username = process.env.OAUTH_GRANTTYPE;
-const password = process.env.OAUTH_ID;
-const grantType = process.env.OAUTH_SECRET ;
-const tokenResource = process.env.TOKEN_PATH;
-const type = 'Value';
-
 // Ews object enums
 const EwsObjectTypes = {
 	Container: '0',
@@ -70,13 +61,50 @@ const queryBuilder = function queryBuilder(endpoint) {
 		const result = await authenticate(args);
 		return result;
 	};
+//Return array of VAVs in todays maintenance
+const getServersContainer = async function getServersContainer(args) {
+  if (typeof args == 'undefined') return undefined;
 
+  const { path } = args;
+  const token = bearerToken.expired
+    ? ensureBearerToken({ username, password, grantType, tokenResource })
+    : bearerToken.access_token;
+
+  if (!token || !endpoint || !path) return undefined;
+
+  const doubleEncodedUri = encodeURIComponent(
+    encodeURIComponent(`00${path}`)
+  );
+  const type = Object.hasOwnProperty.call(args, 'type')
+    ? Object.keys.call(EwsObjectTypes).includes(args.type)
+      ? `&type=${EwsObjectTypes[args.type]}`
+      : ''
+    : '';
+
+  const response = await fetch(
+    `${endpoint}/Containers/${doubleEncodedUri}${type}/Children`,
+    {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  /*
+  Returns Array of Automation server to populate maintenance schedule 
+  res.name is used to populate maintenance schedule
+  */
+  const result = await response.json();  
+  return result;
+};
 	/**
 	 * @param {Object} args - Arguments: path, type.
 	 *
 	 * @returns {Object} Objects inside specified container path.
 	 */
-	const getContainerChildren = async function getContainerChildren(args) {
+
+  //Return array of VAVs in todays maintenance
+	const getTodaysMaintenanceContainer = async function getTodaysMaintenanceContainer(args) {
 		if (typeof args == 'undefined') return undefined;
 
 		const { path } = args;
@@ -104,52 +132,38 @@ const queryBuilder = function queryBuilder(endpoint) {
 				},
 			}
 		);
-
-		const result = await response.json();
+    /*
+    Returns VAVs on bacnet interface of list controller 
+    res.description is the name used to populate maintenance cards
+    res.name is used in ${selectVAV}
+    */
+		const result = await response.json();  
 		return result;
 	};
 
 	/**
-	 * @param {Object} args - Arguments: trendId, sampledOnOrAfter, sampledBefore, order, seconds, skip.
+	 * @param {Object} args - Arguments: ValueID.
 	 *
-	 * @returns {Object} Trend samples.
+	 * @returns {Object} VAV values.
 	 */
-	const getTrendSamples = async function getTrendSamples(args) {
+	const getValues = async function getValues(args) {
 		if (typeof args == 'undefined') return undefined;
 
-		const { trendId } = args;
+		const { valueId } = args;
 		const token = bearerToken.expired
 			? ensureBearerToken({ username, password, grantType, tokenResource })
 			: bearerToken.access_token;
 
-		if (!endpoint || !token || !trendId) return undefined;
+		if (!endpoint || !token || !valueId) return undefined;
 
-		const doubleEncodedUri = `trendId=${encodeURIComponent(
-			encodeURIComponent(trendId)
+		const doubleEncodedUri = `valueId=${encodeURIComponent(
+			encodeURIComponent(valueId)
 		)}`;
-		const sampledOnOrAfter = Object.hasOwnProperty.call(
-			args,
-			'sampledOnOrAfter'
-		)
-			? `&sampledOnOrAfter=${encodeURIComponent(args.sampledOnOrAfter)}`
-			: '';
-		const sampledBefore = Object.hasOwnProperty.call(args, 'sampledBefore')
-			? `&sampledOnOrAfter=${encodeURIComponent(args.sampledBefore)}`
-			: '';
-		const orderBy = Object.hasOwnProperty.call(args, 'order')
-			? `&orderBy=${
-					args.order == 'desc' ? 'SampleDateDescending' : 'SampleDateAscending'
-			  }`
-			: '';
-		const take = Object.hasOwnProperty.call(args, 'seconds')
-			? `&take=${args.seconds}`
-			: '';
-		const skip = Object.hasOwnProperty.call(args, 'skip')
-			? `&skip=${args.skip}`
-			: '';
-
+		
+			
+		
 		const response = await fetch(
-			`${endpoint}/TrendSamples?${doubleEncodedUri}${sampledOnOrAfter}${sampledBefore}${orderBy}${take}${skip}`,
+			`${endpoint}/Values?${doubleEncodedUri}`,
 			{
 				headers: {
 					Accept: 'application/json',
@@ -164,20 +178,21 @@ const queryBuilder = function queryBuilder(endpoint) {
 
 	return {
 		ensureBearerToken,
-		getContainerChildren,
-		getTrendSamples,
+    getServersContainer,
+		getTodaysMaintenanceContainer,
+		getValues,
 		bearerToken,
 	};
 };
 
 // Constants
-const endpoint = 'http://localhost:8083';
-const path = '/ES1/Trendlogs';
-const username = 'username';
-const password = 'password';
-const grantType = 'password';
-const tokenResource = 'GetToken';
-const type = 'Trend';
+const endpoint = process.env.ENDPOINT ;
+const path = `${todaysMaintenance}/BACnet Interface/IP Network`;
+const username = process.env.OAUTH_GRANTTYPE;
+const password = process.env.OAUTH_ID;
+const grantType = process.env.OAUTH_SECRET ;
+const tokenResource = process.env.TOKEN_PATH;
+const type = 'Value';
 
 // Create endpoint instance
 const eboEndpoint = queryBuilder(endpoint);
@@ -190,21 +205,21 @@ await eboEndpoint.ensureBearerToken({
 	tokenResource,
 });
 
-// Get all trend logs in path
-const trendLogObjects = await eboEndpoint.getContainerChildren({ path, type });
+// Get all VAVs in path
+const maintenanceObjects = await eboEndpoint.getTodaysMaintenanceContainer({ path, type });
 
 // Get all trend samples for each trend log object
 // This asserts that trends log a value every second which should return data for the last 5 minutes
-const trendSamples = await trendLogObjects.map(async (trendLog) => {
+const trendSamples = await maintenanceObjects.map(async (maintenance) => {
 	const order = 'desc';
 	const fiveMinutes = 5 * 3600;
 
-	const name = trendLog.Name;
-	const description = trendLog.Description;
-	const unit = trendLog.Unit;
-	const liveValueId = trendLog.ValueId;
-	const trendSamples = await eboEndpoint.getTrendSamples({
-		trendId: trendLog.Id,
+	const name = maintenance.Name;
+	const description = maintenance.Description;
+	const unit = maintenance.Unit;
+	const liveValueId = maintenance.ValueId;
+	const trendSamples = await eboEndpoint.getValues({
+		valueId: maintenance.Id,
 		order,
 		take: fiveMinutes,
 	});
