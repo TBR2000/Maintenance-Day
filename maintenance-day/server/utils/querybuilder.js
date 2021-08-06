@@ -156,14 +156,14 @@ const getServersContainer = async function getServersContainer(args) {
 
 		if (!endpoint || !token || !valueId) return undefined;
 
-		const doubleEncodedUri = `valueId=${encodeURIComponent(
+		const doubleEncodedUri = `${encodeURIComponent(
 			encodeURIComponent(valueId)
 		)}`;
 		
 			
 		
 		const response = await fetch(
-			`${endpoint}/Values?${doubleEncodedUri}`,
+			`${endpoint}/Values${doubleEncodedUri}`,
 			{
 				headers: {
 					Accept: 'application/json',
@@ -187,7 +187,7 @@ const getServersContainer = async function getServersContainer(args) {
 
 // Constants
 const endpoint = process.env.ENDPOINT ;
-const path = `${todaysMaintenance}/BACnet Interface/IP Network`;
+const path = `${todaysMaintenance}`;
 const username = process.env.OAUTH_GRANTTYPE;
 const password = process.env.OAUTH_ID;
 const grantType = process.env.OAUTH_SECRET ;
@@ -208,35 +208,23 @@ await eboEndpoint.ensureBearerToken({
 // Get all VAVs in path
 const maintenanceObjects = await eboEndpoint.getTodaysMaintenanceContainer({ path, type });
 
-// Get all trend samples for each trend log object
-// This asserts that trends log a value every second which should return data for the last 5 minutes
-const trendSamples = await maintenanceObjects.map(async (maintenance) => {
-	const order = 'desc';
-	const fiveMinutes = 5 * 3600;
+//Push all VAVs to new array, and get all 3 values for each VAV
+const assetArray = await maintenanceObjects.map(async (data) => {
 
-	const name = maintenance.Name;
-	const description = maintenance.Description;
-	const unit = maintenance.Unit;
-	const liveValueId = maintenance.ValueId;
-	const trendSamples = await eboEndpoint.getValues({
-		valueId: maintenance.Id,
-		order,
-		take: fiveMinutes,
+  const assetValue = await eboEndpoint.getValues({
+		valueId: `${path}/BACnet Interface/IP Network/${data.Id}/Application/Variables/ZnTmp/Value`
 	});
-	const values = await trendSamples;
+  const assetSetpoint = await eboEndpoint.getValues({
+		valueId: `${path}/BACnet Interface/IP Network/${data.Id}/Application/SetPoints/ZnTmpSpAct/Value`
+	});
+  const assetDamper = await eboEndpoint.getValues({
+		valueId: `${path}/BACnet Interface/IP Network/${data.Id}/Application/Variables/TermLoad/Value`
+	});
 
-	const exampleSampleData = {
-		name,
-		description,
-		unit,
-		liveValueId,
-		values,
-	};
-
-	return exampleSampleData;
+	return assetValue, assetSetpoint, assetDamper;
 });
 
-// This returns all trend samples, it can take a while before it is settled.
-Promise.all(trendSamples).then((completed) =>
-	console.log('All trend samples last 5 minutes:', completed)
+// This returns all values, it can take a while before it is settled.
+Promise.all(assetArray).then((completed) =>
+	console.log('Values Read', completed)
 );

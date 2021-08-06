@@ -1,8 +1,8 @@
 const query = require('./querybuilder')
 
 const deviationLimit = 10;
-const value = Number(res.value)
-const setpoint = Number (res.setpoint)
+const value = Number(query.value)
+const setpoint = Number (query.setpoint)
 
 //Check if input is plus/minus x percent from setpoint
 const setpointDeviation = value / setpoint
@@ -21,6 +21,6 @@ if (roundDown > upperLimit || roundUp < lowerLimit ){
 
 //Check if anologue point is at 0% or 100%
 
-if(res.actuator === '0' || '100' ) {
+if(query.anologue === '0' || '100' ) {
     console.log('issue')
 };
