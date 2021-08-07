@@ -28,7 +28,7 @@ const typeDefs = gql`
   type Responses {
     question: String
     response: String
-    asset: String
+    asset: Assets
 
   }
 
@@ -55,6 +55,7 @@ const typeDefs = gql`
     users: [User]
     user(username: String!): User
     Assets: [Assets]
+    asset(assetid:Id!): [Assets]
     InstalledParts: [InstalledParts]
     Clients: [Clients]
     Responses: [Responses]
@@ -65,9 +66,14 @@ const typeDefs = gql`
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    addAsset(asset_type: String!, asset_name: String!, maintenance_month: String!): Assets
-    addParts(asset_name: String!, possible_parts: String, part_number: String): Assets
+    addAsset(asset_type: String!, asset_name: String!, possible_parts:String maintenance_month: String!): Assets
+    addParts(possible_parts: String, part_number: String): Assets
+    addPartToAsset(partId:ID!, assetId:ID!): Assets
     addResponse (questions: String!, response: String!, asset: String!): Responses
+    removeAsset(assetid:ID!,asset_name: String!):Assets
+    removeResponse(responseid: ID!): Responses
+
+
   }
 `;
 

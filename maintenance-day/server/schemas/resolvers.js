@@ -1,30 +1,42 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User, Assets, InstalledParts, Responses } = require('../models');
+const { User, Assets, InstalledParts, Responses, Clients, Parts } = require('../models');
 const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
-    Assets: async () => {
-      return await Assets.find({}).populate('InstalledParts').populate({
-        path: 'InstalledParts'
-      });
-    },
+      // Find all assets and installed parts
+      Assets: async () => {
+        return await Assets.find({}).populate('InstalledParts').populate({
+          path: 'InstalledParts'
+        });
+      },
 
-    InstalledParts: async () => {
-        return await InstalledParts.find({});
+      Asset: async (parent, { assetId }) => {
+        return Assets.findOne({ _id: assetId });
+      },
+
+      // find all installed parts 
+      InstalledParts: async () => {
+          return await InstalledParts.find({});
       },
     
+      //find all respones
+      Responses: async () => {
+      return await Responses.find({});
+      },
 
-    InstalledParts: async () => {
-      return await InstalledParts.find({});
-    }
+      //find all clients
+      Clients: async () => {
+        return await Clients.find({})
+      },
 
+      //find all parts
+      Parts: async () => {
+        return await Parts.find({})
+      }
   },  
   
-
-    //clients: async () => {},
-
-    //parts: async () => {},
+  
     
   
 
@@ -61,9 +73,46 @@ const resolvers = {
       return { token, user };
     },
     
-    
-   
-   
+    //Add a new asset
+    addAsset: async (parent, {name, type, parts, month}) => {
+      const asset = await Assets.create({name, type, parts, month});
+      return asset
+    },
+
+    //Add a new part
+    addParts: async (parent, {part, partNum}) => {
+      const part = await Parts.create({part, partNum});
+      return part
+    },
+
+    //Add a part to and asset
+    addPartToAsset: async (parent, {part, asset}) => {
+      return Assets.findOneAndUpdate(
+        { _id: assetId },
+        {
+          $addToSet: { _id: partId },
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+    },
+
+    //Add a Question and Answer to an asset
+    addResponse: async (parent, {question, answer, asset}) => {
+      const asset = await Assets.create({question, answer, asset});
+      return asset
+    },
+
+    //Delete and asset
+    removeAsset: async (parent, {}) => {
+      return Assets.findOneAndDelete({ _id: assetId });
+    },
+
+    removeResponset: async (parent, {}) => {
+      return Response.findOneAndDelete({ _id: reponseId });
+    },   
   },
 };
 
