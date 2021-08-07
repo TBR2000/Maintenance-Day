@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require('mongoose');
 
-const Schema = mongoose.Schema;
+
 
 const assetSchema = new Schema({
   asset_type: {
@@ -31,6 +31,6 @@ const assetSchema = new Schema({
 
 });
 
-const Assets = mongoose.model('Assets', assetSchema);
+const Assets = model('Assets', assetSchema);
 
 module.exports = Assets;

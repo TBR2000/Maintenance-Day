@@ -3,7 +3,7 @@ const path = require('path');
 //const routes = require('./routes');
 const { ApolloServer } = require('apollo-server-express');
 const db = require('./config/connection');
-const sequelize = require('./config/connection');
+const sequelize = require('./config/sqlconnection');
 const { typeDefs, resolvers } = require('./schemas');
 
 const app = express();
@@ -28,7 +28,8 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
-//sequelize.sync({ force: false }).then(() => {
+// turn on connection to db and server
+sequelize.sync({ force: false })
 db.once('open', () => {
     app.listen(PORT, () => {
       console.log(`API server running on port ${PORT}!`);
@@ -36,4 +37,3 @@ db.once('open', () => {
       console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
     });
   });
-//});

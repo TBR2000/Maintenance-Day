@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require('mongoose');
 
-const Schema = mongoose.Schema;
+
 
 const partsSchema = new Schema ({
     asset_type: {
@@ -15,6 +15,6 @@ const partsSchema = new Schema ({
       
     })
 
-const InstalledParts = mongoose.model('Parts', partsSchema);
+const InstalledParts = model('InstalledParts', partsSchema);
 
 module.exports = InstalledParts

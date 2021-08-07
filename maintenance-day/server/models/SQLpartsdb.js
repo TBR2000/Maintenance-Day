@@ -1,7 +1,7 @@
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/connection');
+const sequelize = require('../config/sqlconnection');
 
-class Partsdb extends Model {}
+class Parts extends Model {}
 
 Parts.init(
   {
@@ -27,8 +27,8 @@ Parts.init(
     timestamps: false,
     freezeTableName: true,
     underscored: true,
-    modelName: 'user',
+    modelName: 'parts',
   }
 );
 
-module.exports = Partsdb;
+module.exports = Parts;

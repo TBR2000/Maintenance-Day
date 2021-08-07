@@ -3,10 +3,10 @@ require('dotenv').config();
 
 // Ews object enums
 const EwsObjectTypes = {
-	Container: '0',
-	Value: '1',
-	Trend: '2',
-	Alarm: '3',
+	Container: '00',
+	Value: '01',
+	Trend: '02',
+	Alarm: '03',
 };
 
 /**

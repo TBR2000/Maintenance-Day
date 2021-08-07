@@ -1,5 +1,7 @@
 const Assets = require('./Assets');
-const Possible_Parts = require('./InstalledParts')
-const Users = require ('./Users')
+const InstalledParts = require('./InstalledParts')
+const User = require ('./User')
+const Clients  = require('./SQLclientdb')
+const Parts = require('./SQLpartsdb')
 
-module.exports = { Assets, Possible_Parts, Users };
+module.exports = { Assets, InstalledParts, User, Clients, Parts };

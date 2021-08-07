@@ -1,7 +1,7 @@
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/connection');
+const sequelize = require('../config/sqlconnection');
 
-class clientdb extends Model {}
+class Clients extends Model {}
 
 Clients.init(
   {
@@ -11,10 +11,10 @@ Clients.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    site: {
+    site_name: {
       type: DataTypes.STRING,
     },
-    client: {
+    client_name: {
       type: DataTypes.STRING,
     },
     labour_rate: {
@@ -27,8 +27,8 @@ Clients.init(
     timestamps: false,
     freezeTableName: true,
     underscored: true,
-    modelName: 'user',
+    modelName: 'clients',
   }
 );
 
-module.exports = clientdb;
+module.exports = Clients;
