@@ -2,8 +2,7 @@ const express = require('express');
 const path = require('path');
 //const routes = require('./routes');
 const { ApolloServer } = require('apollo-server-express');
-const db = require('./config/connection');
-const sequelize = require('./config/sqlconnection');
+const { sequelize, mongoose } = require('./config/connection');
 const { typeDefs, resolvers } = require('./schemas');
 
 const app = express();
@@ -29,11 +28,13 @@ app.get('*', (req, res) => {
 });
 
 // turn on connection to db and server
-sequelize.sync({ force: false })
-db.once('open', () => {
+
+mongoose.once('open', () => {
+  sequelize.sync({ force: false }).then(() => {
+    console.log(`MySQL connected`)
     app.listen(PORT, () => {
       console.log(`API server running on port ${PORT}!`);
-      // log where we can go to test our GQL API
       console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
     });
   });
+});

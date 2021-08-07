@@ -12,7 +12,7 @@ const typeDefs = gql`
     _id: ID
     asset_type: String!
     asset_name: String!
-    installed_parts: String
+    possible_parts: InstalledParts
     part_number: String
     maintenance_month: String!
   }
@@ -20,7 +20,16 @@ const typeDefs = gql`
   type InstalledParts {
     _id: ID
     asset_type: String
-    possible_parts: String 
+    possible_parts: String
+    part_number: String 
+    installed: Boolean
+  }
+
+  type Responses {
+    question: String
+    response: String
+    asset: String
+
   }
 
   type Clients {
@@ -45,13 +54,20 @@ const typeDefs = gql`
   type Query {
     users: [User]
     user(username: String!): User
-    
+    Assets: [Assets]
+    InstalledParts: [InstalledParts]
+    Clients: [Clients]
+    Responses: [Responses]
   }
+
+  
 
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-   
+    addAsset(asset_type: String!, asset_name: String!, maintenance_month: String!): Assets
+    addParts(asset_name: String!, possible_parts: String, part_number: String): Assets
+    addResponse (questions: String!, response: String!, asset: String!): Responses
   }
 `;
 

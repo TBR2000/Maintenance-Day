@@ -1,18 +1,32 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User, Assets, InstalledParts } = require('../models');
+const { User, Assets, InstalledParts, Responses } = require('../models');
 const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
-    //Assets: async () => {},
+    Assets: async () => {
+      return await Assets.find({}).populate('InstalledParts').populate({
+        path: 'InstalledParts'
+      });
+    },
 
-    //installedParts: async () => {},
+    InstalledParts: async () => {
+        return await InstalledParts.find({});
+      },
+    
+
+    InstalledParts: async () => {
+      return await InstalledParts.find({});
+    }
+
+  },  
+  
 
     //clients: async () => {},
 
     //parts: async () => {},
     
-  },
+  
 
   Mutation: {
     addUser: async (parent, { username, email, password }) => {

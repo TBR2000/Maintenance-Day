@@ -12,6 +12,8 @@ const partsSchema = new Schema ({
         type: String,
         required: true,
       },
+
+      
       
     })
 
