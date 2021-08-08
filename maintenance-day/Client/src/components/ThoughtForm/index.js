@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 
-import { ADD_THOUGHT } from '../../utils/mutations';
-import { QUERY_THOUGHTS } from '../../utils/queries';
+import {  } from '../../utils/mutations';
+import {  } from '../../utils/queries';
 
 import Auth from '../../utils/auth';
 
@@ -12,13 +12,12 @@ const ThoughtForm = () => {
 
   const [characterCount, setCharacterCount] = useState(0);
 
-  const [addThought, { error }] = useMutation(ADD_THOUGHT, {
+  const [addThought, { error }] = useMutation( {
     update(cache, { data: { addThought } }) {
       try {
-        const { thoughts } = cache.readQuery({ query: QUERY_THOUGHTS });
+        const { thoughts } = cache.readQuery();
 
         cache.writeQuery({
-          query: QUERY_THOUGHTS,
           data: { thoughts: [addThought, ...thoughts] },
         });
       } catch (e) {

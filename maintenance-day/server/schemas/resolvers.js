@@ -34,6 +34,20 @@ const resolvers = {
       //find all parts
       Parts: async () => {
         return await Parts.find({})
+      },
+
+      //find all Servers
+      getServers: async () => {
+       await getServers()
+      },
+
+      //find all vavs
+      getVavs: async () => {
+        await getVavs()
+      },
+
+      getValues: async () => {
+        await getVavs()
       }
   },  
   
@@ -100,6 +114,16 @@ const resolvers = {
       );
     },
 
+    getAllServers: async (parent, {response}) => {
+      const servers = await GetServers.create({response});
+      return servers
+    },
+
+    getTodaysVavs: async (parent, {response}) => {
+      const vavs = await GetVavs.create({response});
+      return vavs
+    },
+    
     //Add a Question and Answer to an asset
     addResponse: async (parent, {question, answer, asset}) => {
       const assetQuestions = await Assets.create({question, answer, asset});

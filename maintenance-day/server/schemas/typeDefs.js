@@ -75,6 +75,7 @@ const typeDefs = gql`
     Parts: [Parts]
     Responses: [Responses]
     getServers: [GetServers]
+    getVavs: [GetVavs]
     getValues: [GetVavs]
   }
 

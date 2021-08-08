@@ -24,4 +24,3 @@ export const ADD_USER = gql`
   }
 `;
 
-export const 

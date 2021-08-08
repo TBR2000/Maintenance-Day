@@ -1,6 +1,6 @@
 {
-  "name": "tech-matchup-app",
-  "version": "1.0.0",
+  "name": "maintenance-day",
+  "version": "0.1.0",
   "description": "",
   "main": "server/server.js",
   "scripts": {
