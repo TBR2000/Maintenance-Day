@@ -37,13 +37,18 @@ const resolvers = {
       },
 
       //find all Servers
-      getServers: async () => {
-       await getServers()
+      getServers: async (parent, {path}) => {
+        //console.log(path)
+       const servers = await getServers(path)
+       //console.log('gql',servers)
+       return servers
       },
 
       //find all vavs
-      getVavs: async () => {
-        await getVavs()
+      getVavs: async (parent, {path}) => {
+        const vavs = await getVavs(path)
+        console.log(vavs)
+        return vavs
       },
 
       getValues: async () => {
@@ -114,8 +119,9 @@ const resolvers = {
       );
     },
 
-    getAllServers: async (parent, {response}) => {
-      const servers = await GetServers.create({response});
+    getAllServers: async (parent, {path}) => {
+      const servers = await getServers(path);
+      console.log(servers)
       return servers
     },
 

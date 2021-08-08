@@ -54,7 +54,7 @@ const typeDefs = gql`
 
   type GetServers {
     Id: String!
-    response: String!
+    path: String!
   }
 
   type GetVavs {
@@ -74,10 +74,13 @@ const typeDefs = gql`
     Clients: [Clients]
     Parts: [Parts]
     Responses: [Responses]
-    getServers: [GetServers]
-    getVavs: [GetVavs]
+    getServers(path: String!): [GetServers]
+    getVavs(path: String!): [GetVavs]
     getValues: [GetVavs]
   }
+input IDinput {
+  Id: String
+}
 
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
@@ -86,7 +89,7 @@ const typeDefs = gql`
     addParts(possible_parts: String, part_number: String): Assets
     addPartToAsset(partId:ID!, assetId:ID!): Assets
     addResponse (questions: String!, response: String!, asset: String!): Responses
-    getAllServers(response: String!): GetServers
+    getAllServers(path: String! Id: [IDinput]): GetServers
     getTodaysVavs(response: String!): GetVavs
     removeAsset(assetid:ID!,asset_name: String!):Assets
     removeResponse(responseid: ID!): Responses
