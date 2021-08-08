@@ -1,6 +1,7 @@
 const { AuthenticationError } = require('apollo-server-express');
 const { User, Assets, InstalledParts, Responses, Clients, Parts } = require('../models');
 const { signToken } = require('../utils/auth');
+const { getServers, getVavs } = require('../utils/querybuilder');
 
 const resolvers = {
   Query: {
@@ -80,13 +81,13 @@ const resolvers = {
     },
 
     //Add a new part
-    addParts: async (parent, {part, partNum}) => {
-      const part = await Parts.create({part, partNum});
+    addParts: async (parent, {partname, partNum}) => {
+      const part = await Parts.create({partname, partNum});
       return part
     },
 
     //Add a part to and asset
-    addPartToAsset: async (parent, {part, asset}) => {
+    addPartToAsset: async (parent, {partId, assetId}) => {
       return Assets.findOneAndUpdate(
         { _id: assetId },
         {
@@ -101,8 +102,8 @@ const resolvers = {
 
     //Add a Question and Answer to an asset
     addResponse: async (parent, {question, answer, asset}) => {
-      const asset = await Assets.create({question, answer, asset});
-      return asset
+      const assetQuestions = await Assets.create({question, answer, asset});
+      return assetQuestions
     },
 
     //Delete and asset
@@ -110,7 +111,7 @@ const resolvers = {
       return Assets.findOneAndDelete({ _id: assetId });
     },
 
-    removeResponset: async (parent, {}) => {
+    removeResponse: async (parent, {}) => {
       return Response.findOneAndDelete({ _id: reponseId });
     },   
   },

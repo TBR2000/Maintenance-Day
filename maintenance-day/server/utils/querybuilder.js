@@ -1,6 +1,8 @@
 const fetch = require('node-fetch');
 require('dotenv').config();
+const input = require('../schemas/resolvers')
 
+const inputFormFrontEnd = input.response
 // Ews object enums
 const EwsObjectTypes = {
 	Container: '00',
@@ -14,6 +16,7 @@ const EwsObjectTypes = {
  *
  * @returns {Object} Querybuilder instance.
  */
+
 const queryBuilder = function queryBuilder(endpoint) {
 	if (!endpoint) return undefined;
 
@@ -61,7 +64,7 @@ const queryBuilder = function queryBuilder(endpoint) {
 		const result = await authenticate(args);
 		return result;
 	};
-//Return array of VAVs in todays maintenance
+//Return array of Automation Servers
 const getServersContainer = async function getServersContainer(args) {
   if (typeof args == 'undefined') return undefined;
 
@@ -75,14 +78,9 @@ const getServersContainer = async function getServersContainer(args) {
   const doubleEncodedUri = encodeURIComponent(
     encodeURIComponent(`00${path}`)
   );
-  const type = Object.hasOwnProperty.call(args, 'type')
-    ? Object.keys.call(EwsObjectTypes).includes(args.type)
-      ? `&type=${EwsObjectTypes[args.type]}`
-      : ''
-    : '';
 
   const response = await fetch(
-    `${endpoint}/Containers/${doubleEncodedUri}${type}/Children`,
+    `${endpoint}/Containers/${doubleEncodedUri}/Children`,
     {
       headers: {
         Accept: 'application/json',
@@ -178,7 +176,7 @@ const getServersContainer = async function getServersContainer(args) {
 
 	return {
 		ensureBearerToken,
-    getServersContainer,
+    	getServersContainer,
 		getTodaysMaintenanceContainer,
 		getValues,
 		bearerToken,
@@ -187,7 +185,7 @@ const getServersContainer = async function getServersContainer(args) {
 
 // Constants
 const endpoint = process.env.ENDPOINT ;
-const path = `${todaysMaintenance}`;
+const path = inputFormFrontEnd;
 const username = process.env.OAUTH_GRANTTYPE;
 const password = process.env.OAUTH_ID;
 const grantType = process.env.OAUTH_SECRET ;
@@ -197,34 +195,67 @@ const type = 'Value';
 // Create endpoint instance
 const eboEndpoint = queryBuilder(endpoint);
 
-// Authenticate
-await eboEndpoint.ensureBearerToken({
-	username,
-	password,
-	grantType,
-	tokenResource,
-});
-
-// Get all VAVs in path
-const maintenanceObjects = await eboEndpoint.getTodaysMaintenanceContainer({ path, type });
-
-//Push all VAVs to new array, and get all 3 values for each VAV
-const assetArray = await maintenanceObjects.map(async (data) => {
-
-  const assetValue = await eboEndpoint.getValues({
-		valueId: `${path}/BACnet Interface/IP Network/${data.Id}/Application/Variables/ZnTmp/Value`
-	});
-  const assetSetpoint = await eboEndpoint.getValues({
-		valueId: `${path}/BACnet Interface/IP Network/${data.Id}/Application/SetPoints/ZnTmpSpAct/Value`
-	});
-  const assetDamper = await eboEndpoint.getValues({
-		valueId: `${path}/BACnet Interface/IP Network/${data.Id}/Application/Variables/TermLoad/Value`
+//Get list of all servers
+const getServers = async() => {
+	
+	// Authenticate
+	await eboEndpoint.ensureBearerToken({
+		username,
+		password,
+		grantType,
+		tokenResource,
 	});
 
-	return assetValue, assetSetpoint, assetDamper;
-});
+	const serverObjects = 	await eboEndpoint.getServersContainer({path})
 
-// This returns all values, it can take a while before it is settled.
-Promise.all(assetArray).then((completed) =>
+	const serverArray = await serverObjects.map(async (data) => {
+		return serverArray
+	})
+	
+
+	// This returns all values, it can take a while before it is settled.
+	Promise.all(serverArray).then((completed) =>
 	console.log('Values Read', completed)
-);
+	);
+	return completed;
+};
+	
+// Get all VAVs in path
+const getVavs = async() => { 
+
+	// Authenticate
+	await eboEndpoint.ensureBearerToken({
+		username,
+		password,
+		grantType,
+		tokenResource,
+	});
+
+	const maintenanceObjects = await eboEndpoint.getTodaysMaintenanceContainer({ path, type });
+
+	//Push all VAVs to new array, and get all 3 values for each VAV
+	const assetArray = await maintenanceObjects.map(async (data) => {
+
+	const assetValue = await eboEndpoint.getValues({
+			valueId: `${path}/BACnet Interface/IP Network/${data.Id}/Application/Variables/ZnTmp/Value`
+		});
+	const assetSetpoint = await eboEndpoint.getValues({
+			valueId: `${path}/BACnet Interface/IP Network/${data.Id}/Application/SetPoints/ZnTmpSpAct/Value`
+		});
+	const assetDamper = await eboEndpoint.getValues({
+			valueId: `${path}/BACnet Interface/IP Network/${data.Id}/Application/Variables/TermLoad/Value`
+		});
+
+		return maintenanceObjects, assetValue, assetSetpoint, assetDamper;
+		
+	});
+
+	// This returns all values, it can take a while before it is settled.
+	Promise.all(assetArray).then((completed) =>
+		console.log('Values Read', completed)
+	);
+	return completed;
+};
+
+
+module.exports = { getServers, getVavs }

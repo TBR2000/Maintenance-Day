@@ -17,6 +17,7 @@ const typeDefs = gql`
     maintenance_month: String!
   }
 
+
   type InstalledParts {
     _id: ID
     asset_type: String
@@ -51,17 +52,31 @@ const typeDefs = gql`
     user: User
   }
 
+  type GetServers {
+    Id: String!
+    response: String!
+  }
+
+  type GetVavs {
+    maintenanceObjects: String!
+    assetValue: String!
+    assetSetpoint: String!
+    assetDamper: String!
+    response: String!
+  }
+
   type Query {
     users: [User]
     user(username: String!): User
     Assets: [Assets]
-    asset(assetid:Id!): [Assets]
+    Asset(assetid:ID!): [Assets]
     InstalledParts: [InstalledParts]
     Clients: [Clients]
+    Parts: [Parts]
     Responses: [Responses]
+    getServers: [GetServers]
+    getValues: [GetVavs]
   }
-
-  
 
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
@@ -70,6 +85,8 @@ const typeDefs = gql`
     addParts(possible_parts: String, part_number: String): Assets
     addPartToAsset(partId:ID!, assetId:ID!): Assets
     addResponse (questions: String!, response: String!, asset: String!): Responses
+    getAllServers(response: String!): GetServers
+    getTodaysVavs(response: String!): GetVavs
     removeAsset(assetid:ID!,asset_name: String!):Assets
     removeResponse(responseid: ID!): Responses
 
