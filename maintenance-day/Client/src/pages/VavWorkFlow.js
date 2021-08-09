@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Vavlist } from '../components/VavList'
+import  Vavlist from '../components/VavList'
 
-import { QUERY_VAVS } from '../../utils/queries'
+import { QUERY_VAVS } from '../utils/queries'
 
 const VavWorkFlow = ({ thoughts, title }) => {
 const vavPath = useParams()
@@ -21,7 +21,7 @@ const vavPath = useParams()
           {(loading ? (
             <div>Loading...</div>
           ) : (
-            <VavList
+            <Vavlist
               vavs={vavs}
               title="Choose VAV to start task on"
             />
