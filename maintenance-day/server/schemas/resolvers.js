@@ -47,7 +47,7 @@ const resolvers = {
       //find all vavs
       getVavs: async (parent, {path}) => {
         const vavs = await getVavs(path)
-        console.log(vavs)
+        //console.log(vavs)
         return vavs
       },
 

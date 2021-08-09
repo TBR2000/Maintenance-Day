@@ -81,7 +81,7 @@ const getServersContainer = async function getServersContainer(args) {
   const doubleEncodedUri = encodeURIComponent(
     encodeURIComponent(`00${path}`)
   );
-  
+  //console.log(`${endpoint}/Containers/${doubleEncodedUri}/Children`)
   const response = await fetch(
     `${endpoint}/Containers/${doubleEncodedUri}/Children`,
     {
@@ -109,7 +109,7 @@ const getServersContainer = async function getServersContainer(args) {
 		if (typeof args == 'undefined') return undefined;
 		
 		const path = args;
-		console.log(path)
+		
 		const token = bearerToken.expired
 			? ensureBearerToken({ username, password, grantType, tokenResource })
 			: bearerToken.access_token;
@@ -125,7 +125,7 @@ const getServersContainer = async function getServersContainer(args) {
 				? `&type=${EwsObjectTypes[args.type]}`
 				: ''
 			: '';
-
+			//console.log(`${endpoint}/Containers/${doubleEncodedUri}/Children`)
 		const response = await fetch(
 			`${endpoint}/Containers/${doubleEncodedUri}/Children`,
 			{
@@ -135,7 +135,7 @@ const getServersContainer = async function getServersContainer(args) {
 				},
 			}
 		);
-		console.log(response)
+		
     /*
     Returns VAVs on bacnet interface of list controller 
     res.description is the name used to populate maintenance cards
@@ -154,20 +154,24 @@ const getServersContainer = async function getServersContainer(args) {
 		if (typeof args == 'undefined') return undefined;
 
 		const valueId  = args;
-		const token = bearerToken.expired
+		
+			const token = bearerToken.expired
 			? ensureBearerToken({ username, password, grantType, tokenResource })
 			: bearerToken.access_token;
 
 		if (!endpoint || !token || !valueId) return undefined;
 
-		const doubleEncodedUri = `${encodeURIComponent(
+        //console.log("valueID", valueId )
+		
+		const doubleEncodedUri = encodeURIComponent(
 			encodeURIComponent(valueId)
-		)}`;
+			);
 		
-		console.log	('doubleEncodedUri', valueId)
 		
+		//console.log(`${endpoint}/Values/${doubleEncodedUri}/Value`)
+
 		const response = await fetch(
-			`${endpoint}/Values${doubleEncodedUri}`,
+			`${endpoint}/Values/${doubleEncodedUri}/Value`,
 			{
 				headers: {
 					Accept: 'application/json',
@@ -175,7 +179,7 @@ const getServersContainer = async function getServersContainer(args) {
 				},
 			}
 		);
-
+			
 		const result = await response.json();
 		return result;
 	};
@@ -214,7 +218,7 @@ const getServers = async(path) => {
 	
 	
 	const serverObjects = 	await eboEndpoint.getServersContainer(path)
-	//console.log('api', serverObjects)
+	
 	return serverObjects;
 };
 	
@@ -230,28 +234,44 @@ const getVavs = async(path) => {
 	});
 
 	const maintenanceObjects = await eboEndpoint.getTodaysMaintenanceContainer(path);
-	console.log(maintenanceObjects)
+	
 	//Push all VAVs to new array, and get all 3 values for each VAV
 	
 	const assetArray = await maintenanceObjects.map(async (data) => {
-	
-	const assetValue = await eboEndpoint.getValues({
-			valueId: `${path}${data.Name}/Application/Variables/ZnTmp/Value`
-		});
-	const assetSetpoint = await eboEndpoint.getValues({
-			valueId: `${path}${data.Name}/Application/SetPoints/ZnTmpSpAct/Value`
-		});
-	const assetDamper = await eboEndpoint.getValues({
-			valueId: `${path}${data.Name}/Application/Variables/TermLoad/Value`
-		});
-		console.log('assetArray',maintenanceObjects, assetValue, assetSetpoint, assetDamper)
-		return maintenanceObjects, assetValue, assetSetpoint, assetDamper;
 		
+		if (data.Name.includes("Vav")) {	
+			const assetValue = await eboEndpoint.getValues(
+					 `01${path}/${data.Name}/Application/Variables/ZnTmp`
+				);
+			const assetSetpoint = await eboEndpoint.getValues(
+					 `01${path}/${data.Name}/Application/SetPoints/ZnTmpSpAct`
+				);
+			const assetDamper = await eboEndpoint.getValues(
+					`01${path}/${data.Name}/Application/Variables/TermLoad`
+				);
+
+				const name = data.Name
+				const value = await assetValue
+				const setpoint = await assetSetpoint
+				const damper = await assetDamper
+
+				const outputData = {
+					name,
+					value,
+					setpoint,
+					damper
+				}
+				
+				//console.log("output", outputData )
+				return outputData;
+			}
+
 	});
 
 	// This returns all values, it can take a while before it is settled.
-	
+	return Promise.all(assetArray)
+	   	
+		 
 };
-
 
 module.exports = { getServers, getVavs }

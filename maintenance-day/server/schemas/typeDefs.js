@@ -58,11 +58,15 @@ const typeDefs = gql`
   }
 
   type GetVavs {
-    maintenanceObjects: String!
-    assetValue: String!
-    assetSetpoint: String!
-    assetDamper: String!
-    response: String!
+    assetArray: [[String]]
+    path: String!
+  }
+
+  type assetArray{
+    name: String
+    value: String
+    setpoint: String
+    damper: String
   }
 
   type Query {
@@ -75,7 +79,8 @@ const typeDefs = gql`
     Parts: [Parts]
     Responses: [Responses]
     getServers(path: String!): [GetServers]
-    getVavs(path: String!): [GetVavs]
+    getVavs(path: String!): [assetArray]
+    assetArray: [assetArray]
     getValues: [GetVavs]
   }
 input IDinput {
