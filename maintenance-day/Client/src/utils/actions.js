@@ -1,5 +1,3 @@
-export const ADD_TODO = "ADD_TODO";
-export const COMPLETE_TODO = "COMPLETE_TODO";
-
-export const INC_COUNT = "INC_COUNT";
-export const DEC_COUNT = "DEC_COUNT";
+export const ADD_ASSET = "ADD_ASSET";
+export const ADD_PART_TO_ASSET = "ADD_PART_TO_ASSET";
+export const ANSWER_TO_QUESTION = "ANSWER_TO_QUESTION"
