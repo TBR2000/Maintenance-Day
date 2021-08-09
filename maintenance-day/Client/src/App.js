@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
-import SingleThought from './pages/SingleThought';
+import VavWorkFlow from './pages/VavWorkFlow';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -49,9 +49,9 @@ function App() {
             </Route>
             <Route exact path="/signup">
               <Signup />
-            </Route>
-            <Route exact path="/thoughts/:thoughtId">
-              <SingleThought />
+            </Route>  
+            <Route exact path="/vav/:servers.Id/BACnet Interface/IP Network">
+              <VavWorkFlow />
             </Route>
           </div>
           <Footer />

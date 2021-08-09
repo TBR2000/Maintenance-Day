@@ -1,33 +1,32 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
+import { useParams } from 'react-router-dom';
 
-import ThoughtList from '../components/ThoughtList';
-import ThoughtForm from '../components/ThoughtForm';
+import ServerList from '../components/ServerList';
 
-import {  } from '../utils/queries';
+
+import { QUERY_SERVERS } from '../utils/queries';
 
 const Home = () => {
-  const { loading, data } = useQuery();
-  const thoughts = data?.thoughts || [];
+  const { pathid } = "/Enterprise Server/Servers"
+  const { loading, data } = useQuery(QUERY_SERVERS, {
+    // pass URL parameter
+    variables: { path: pathid },
+  });
+  const servers = data?.Id || [];
 
   return (
     <main>
       <div className="flex-row justify-center">
-        <div
-          className="col-12 col-md-10 mb-3 p-3"
-          style={{ border: '1px dotted #1a1a1a' }}
-        >
-          <ThoughtForm />
-        </div>
         <div className="col-12 col-md-8 mb-3">
-          {loading ? (
+          {(loading ? (
             <div>Loading...</div>
           ) : (
-            <ThoughtList
-              thoughts={thoughts}
-              title="Some Feed for Thought(s)..."
+            <ServerList
+              servers={servers}
+              title="Which Equipment are you Maintaining?"
             />
-          )}
+          ))}
         </div>
       </div>
     </main>

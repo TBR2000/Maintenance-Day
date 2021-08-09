@@ -6,15 +6,12 @@ const setpoint = Number (query.setpoint)
 
 //Check if input is plus/minus x percent from setpoint
 const setpointDeviation = value / setpoint
-const xFromSetpoint = deviationLimit/10
+const xFromSetpoint = deviationLimit/100
 const lowerLimit = 1 - xFromSetpoint
 const upperLimit = 1 + xFromSetpoint
-const roundUp = Math.ceil(setpointDeviation*100)/100
-const roundDown = Math.floor(setpointDeviation*100)/100
-console.log(setpointDeviation)
-console.log(roundUp, roundDown)
 
-if (roundDown > upperLimit || roundUp < lowerLimit ){
+
+if (setpointDeviation > upperLimit || setpointDeviation < lowerLimit ){
     console.log('issue')
 }
 
