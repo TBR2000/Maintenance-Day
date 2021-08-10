@@ -54,7 +54,7 @@ function App() {
             <Route exact path="/signup">
               <Signup />
             </Route>  
-            <Route exact path="/:server.Id/BACnet Interface/IP Network">
+            <Route exact path= "/BACnet Interface/IP Network">
               <VavWorkFlow />
             </Route>
           </div>
