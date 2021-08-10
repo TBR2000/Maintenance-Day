@@ -6,8 +6,9 @@ import  Vavlist from '../components/VavList'
 
 import { QUERY_VAVS } from '../utils/queries'
 
-const VavWorkFlow = ({ thoughts, title }) => {
+const VavWorkFlow = () => {
 const vavPath = useParams()
+console.log(vavPath)
   const { loading, data } = useQuery(QUERY_VAVS, {
     // pass URL parameter
     variables: { path: vavPath },

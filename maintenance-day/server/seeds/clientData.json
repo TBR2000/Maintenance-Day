@@ -1,22 +1,22 @@
 [
     {
-      "site_name": "",
-      "client_name": "",
+      "site_name": "ACME",
+      "client_name": "Reg",
       "labour_rate": 180
     },
     {
-        "site_name": "",
-        "client_name": "",
+        "site_name": "Jonestown",
+        "client_name": "Frank",
         "labour_rate": 190
       },
       {
-        "site_name": "",
-        "client_name": "",
+        "site_name": "Somewhere",
+        "client_name": "Bill",
         "labour_rate": 195
       },
       {
-        "site_name": "",
-        "client_name": "",
+        "site_name": "Someplace",
+        "client_name": "Hugh",
         "labour_rate": 180
-      },
+      }
   ]

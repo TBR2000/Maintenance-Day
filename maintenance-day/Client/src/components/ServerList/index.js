@@ -3,18 +3,18 @@ import { Link } from 'react-router-dom';
 
 const ServerList = ({ servers }) => {
   if (!servers.length) {
-    return <h3>No Servers Yet</h3>;
+    return <h3>No Servers Yet </h3>;
   }
 
   return (
     <div>
       {servers &&
-        servers.map((servers) => (
-          <div key={servers} className="card mb-3">
-            <h3>{servers}</h3>
+        servers.map((server) => (
+          <div key={server.Id} className="card mb-3">
+            <h3>{server.Name}</h3>
             <Link
               className="btn btn-primary btn-block btn-squared"
-              to={`vav/${servers.Id}/BACnet Interface/IP Network`}
+              to={`/${server.Id}/BACnet Interface/IP Network`}
             >
               View VAVS.
             </Link>

@@ -3,9 +3,14 @@ const { gql } = require('apollo-server-express');
 const typeDefs = gql`
   type User {
     _id: ID
-    username: String
-    email: String
-    password: String 
+    username: String!
+    email: String!
+    password: String!
+  }
+
+  type Auth {
+    token: ID!
+    user: User
   }
 
   type Assets {
@@ -47,13 +52,11 @@ const typeDefs = gql`
     unit_price: Int    
   }
 
-  type Auth {
-    token: ID!
-    user: User
-  }
+  
 
   type GetServers {
     Id: String!
+    Name: String!
     path: String!
   }
 

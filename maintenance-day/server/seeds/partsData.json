@@ -1,17 +1,13 @@
 [
     {
-      "asset_type":"",
-      "possible_parts":""
+      "asset_type":"VAV",
+      "possible_parts":"Sensor, Actuator"
       
     },
     {
-      "asset_type":"",
-      "possible_parts":""
-      
-    },
-    {
-      "asset_type":"",
-      "possible_parts":""
+      "asset_type":"FCU",
+      "possible_parts":"Sensor, Actuator"
       
     }
+    
   ]

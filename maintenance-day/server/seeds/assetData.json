@@ -1,23 +1,23 @@
 [
   {
-    "asset_name": "JavaScript",
-    "asset_type":"",
+    "asset_name": "VAV01",
+    "asset_type":"VAV",
     "installed_parts":"",
     "part_number":"",
-    "maintenance_month":""
+    "maintenance_month":"March"
   },
   {
-    "asset_name": "JavaScript",
-    "asset_type":"",
+    "asset_name": "VAV02",
+    "asset_type":"VAV",
     "installed_parts":"",
     "part_number":"",
-    "maintenance_month":""
+    "maintenance_month":"March"
   },
   {
-    "asset_name": "JavaScript",
-    "asset_type":"",
+    "asset_name": "VAV03",
+    "asset_type":"VAV",
     "installed_parts":"",
     "part_number":"",
-    "maintenance_month":""
+    "maintenance_month":"March"
   }
 ]

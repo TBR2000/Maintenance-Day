@@ -14,6 +14,7 @@ export const QUERY_SERVERS = gql`
 query getServers ($path:String!) {
   getServers(path: $path) {
     Id
+    Name
   }
 }
 `;
@@ -25,6 +26,14 @@ query getVavs ($path:String!) {
     value
     setpoint
     damper
+  }
+}
+`;
+
+export const QUERY_QUESTIONS = gql`
+query getServers ($path:String!) {
+  getServers(path: $path) {
+    Id
   }
 }
 `;

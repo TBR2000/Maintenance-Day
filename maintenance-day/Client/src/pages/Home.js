@@ -14,7 +14,7 @@ const Home = () => {
     // pass URL parameter
     variables: { path: pathid },
   });
-  const servers = data?.Id || [];
+  const servers = data?.getServers || [];
 
   return (
     <main>

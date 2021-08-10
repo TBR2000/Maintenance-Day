@@ -1,7 +1,13 @@
-const { sequelize, mongoose } = require('./config/connection');
-const { Assets, InstalledParts, Responses, Clients, Parts } = require('../models');
-const { assetData, partsData, responseData, clientData, costData } = require('./techData.json');
+const { sequelize, mongoose } = require('../config/connection');
+const { User, Assets, InstalledParts, Responses, Clients, Parts } = require('../models');
+const assetData = require ('./assetData.json')
+const partsData = require ('./partsData.json')
+const responseData = require ('./responseData.json')
+const clientData = require ('./clientData.json')
+const costData = require ('./costData.json')
+const userSeeds = require ('./userSeeds.json')
 
+const seedDatabase = async () => {
 mongoose.once('open', async () => {
   await Assets.deleteMany({});
   const Asset = await Assets.insertMany(assetData);
@@ -13,13 +19,16 @@ mongoose.once('open', async () => {
 
   await Responses.deleteMany({});
   const qAnA = await Responses.insertMany(responseData);
-  console.log('Assets seeded!');
+  console.log('responses seeded!');
 
+  await User.deleteMany({});
+  const users = await User.insertMany(userSeeds);
+  console.log('users seeded!');
 
   process.exit(0);
 });
 
-const seedDatabase = async () => {
+
   await sequelize.sync({ force: true });
 
   const Client = await Clients.bulkCreate(clientData, {
@@ -33,6 +42,6 @@ const seedDatabase = async () => {
   });
 
   process.exit(0);
-};
 
+};
 seedDatabase();

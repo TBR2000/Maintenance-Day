@@ -117,8 +117,8 @@ const getServersContainer = async function getServersContainer(args) {
 		if (!token || !endpoint || !path) return undefined;
 			
 		const doubleEncodedUri = encodeURIComponent(
-			encodeURIComponent(`00${path}`)
-		);
+			encodeURIComponent(`00${path}`))
+		;
 	
 		const type = Object.hasOwnProperty.call(args, 'type')
 			? Object.keys.call(EwsObjectTypes).includes(args.type)

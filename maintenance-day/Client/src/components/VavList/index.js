@@ -12,13 +12,13 @@ const VavList = ({ vavs }) => {
   return (
     <div>
       {vavs &&
-        vavs.map((vavs) => (
+        vavs.map((vav) => (
           !questions ? 
-          (<div key={vavs.name} className="card mb-3">
-            <h3>{vavs.name}</h3>
-            <h4>Temp {vavs.value}</h4>
-            <h4>Setpoint {vavs.setpoint}</h4>
-            <h4>Terminal Load {vavs.damper}</h4>
+          (<div key={vav.name} className="card mb-3">
+            <h3>{vav.name}</h3>
+            <h4>Temp {vav.value}</h4>
+            <h4>Setpoint {vav.setpoint}</h4>
+            <h4>Terminal Load {vav.damper}</h4>
             <button 
               onClick={ questions = true }
               className="btn btn-primary"
